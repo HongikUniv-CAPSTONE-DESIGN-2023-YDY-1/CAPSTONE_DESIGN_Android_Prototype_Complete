@@ -19,6 +19,9 @@
         android:theme="@style/Theme.PT_B"
         tools:targetApi="31">
         <activity
+            android:name=".SearchActivity"
+            android:exported="false" />
+        <activity
             android:name=".ResultActivity"
             android:exported="false" />
         <activity
@@ -33,9 +36,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <provider
-            android:authorities="com.example.pt_b"
             android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.pt_b"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
