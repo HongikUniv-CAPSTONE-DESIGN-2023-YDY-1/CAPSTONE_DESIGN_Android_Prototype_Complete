@@ -48,9 +48,16 @@ class CameraActivity : AppCompatActivity() {
             takePhoto()
         }
         binding.goResultButton.setOnClickListener {
-            val intent = Intent(this, ResultActivity::class.java)
-            intent.putExtra("savedUri", savedUri)
-            startActivity(intent)
+
+            if (::savedUri.isInitialized) {
+                val intent = Intent(this, ResultActivity::class.java)
+                intent.putExtra("savedUri", savedUri)
+                startActivity(intent)
+
+            } else {
+                Toast.makeText(this, "사진을 촬영해주세요", Toast.LENGTH_SHORT).show()
+            }
+
         }
         outputDirectory = getOutputDirectory()
         cameraExecutor = Executors.newSingleThreadExecutor()

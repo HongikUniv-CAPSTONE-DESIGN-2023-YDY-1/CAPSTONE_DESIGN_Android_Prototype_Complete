@@ -31,7 +31,6 @@
         android:id="@+id/go_result_button"
         android:layout_width="0dp"
         android:layout_height="100dp"
-
         android:layout_marginBottom="20dp"
         android:backgroundTint="#FAF0D2"
         android:text="찍은 사진 확인하기"

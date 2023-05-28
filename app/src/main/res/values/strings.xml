@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">PT_B</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="google_maps_key">AIzaSyDP5gOmkScv07ECXBxSU4mSeUqV86iWWAo\n</string>
 </resources>
