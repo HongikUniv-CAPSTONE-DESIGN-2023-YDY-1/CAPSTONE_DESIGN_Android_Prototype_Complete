@@ -1,6 +1,7 @@
 package com.example.pt_b.recyclerview
 
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,11 +24,23 @@ class ListAdapter(val itemList: ArrayList<ListLayout>): RecyclerView.Adapter<Lis
     }
 
     override fun onBindViewHolder(holder: ListAdapter.ViewHolder, position: Int) {
-        holder.brand.text = itemList[position].brand
+        val item = itemList[position]
+        val brand = item.brand
+        val brandColor = when(brand) {
+            "CU" -> Color.parseColor("#800080")
+            "GS25" -> Color.parseColor("#50bcdf")
+            "SEVENELEVEN" -> Color.parseColor("#008000")
+            "EMART24" -> Color.parseColor("#FFFF00")
+
+            else -> Color.BLACK
+        }
+        holder.brand.text =brand
+        holder.brand.setTextColor(brandColor)
+
+
         holder.name.text = itemList[position].name
         holder.price.text = itemList[position].price.toString()
-        //"ONE_PLUS_ONE" -> "1 + 1"
-        //"TWO_PLUS_ONE" -> "2 + 1" 변경 로직
+
         val promotion = itemList[position].promotion
         val formattedPromtion = when(promotion) {
             "ONE_PLUS_ONE" -> "1 + 1"
@@ -35,6 +48,8 @@ class ListAdapter(val itemList: ArrayList<ListLayout>): RecyclerView.Adapter<Lis
             else -> promotion
         }
         holder.promotion.text = formattedPromtion
+
+
         val imgUrl = itemList[position].imgUrl
         if (imgUrl != null) {
             Glide.with(holder.itemView)

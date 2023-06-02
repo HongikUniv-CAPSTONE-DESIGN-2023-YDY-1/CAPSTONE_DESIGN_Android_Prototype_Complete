@@ -9,12 +9,8 @@ import com.example.pt_b.databinding.ActivityResultBinding
 
 class ResultActivity : AppCompatActivity() {
     private lateinit var binding: ActivityResultBinding
+    val savedURI = intent.getStringExtra("savedUri")
 
-    val savedUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        intent.getParcelableExtra("savedUri", android.net.Uri::class.java)
-    } else {
-        intent.getParcelableExtra<android.net.Uri>("DATA")
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,6 +18,10 @@ class ResultActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
+
+        if(savedURI != null) {
+
+        }
 
 
 
