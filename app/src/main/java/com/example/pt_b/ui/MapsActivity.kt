@@ -1,4 +1,4 @@
-package com.example.pt_b
+package com.example.pt_b.ui
 
 import android.content.pm.PackageManager
 import android.location.Location
@@ -7,14 +7,13 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
+import com.example.pt_b.R
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.example.pt_b.databinding.ActivityMapsBinding
 import com.google.android.gms.location.FusedLocationProviderClient

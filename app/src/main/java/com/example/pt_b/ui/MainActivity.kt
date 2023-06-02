@@ -1,10 +1,9 @@
-package com.example.pt_b
+package com.example.pt_b.ui
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.pt_b.databinding.ActivityMainBinding
-
 
 
 class MainActivity : AppCompatActivity() {
@@ -15,6 +14,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.btnCamera.setOnClickListener {
             val intent = Intent(this, CameraActivity::class.java)
+            startActivity(intent)
+        }
+        binding.btnTextSearch.setOnClickListener{
+            val intent = Intent(this, TextSearchActivity::class.java)
             startActivity(intent)
         }
 

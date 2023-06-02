@@ -1,4 +1,4 @@
-package com.example.pt_b
+package com.example.pt_b.ui
 
 
 import android.content.Intent
@@ -15,6 +15,7 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.pt_b.R
 import com.example.pt_b.databinding.ActivityCameraBinding
 import java.io.File
 import java.util.Locale
@@ -50,11 +51,12 @@ class CameraActivity : AppCompatActivity() {
         binding.goResultButton.setOnClickListener {
 
             if (::savedUri.isInitialized) {
-                val intent = Intent(this, ResultActivity::class.java)
+                val intent = Intent(this, GoToResultActivity::class.java)
                 intent.putExtra("savedUri", savedUri)
                 startActivity(intent)
 
             } else {
+
                 Toast.makeText(this, "사진을 촬영해주세요", Toast.LENGTH_SHORT).show()
             }
 

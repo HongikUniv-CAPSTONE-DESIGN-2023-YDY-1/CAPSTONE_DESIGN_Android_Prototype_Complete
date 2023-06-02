@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:id="@+id/list_photo_view"
+    android:orientation="horizontal"
+    android:layout_marginTop="8dp"
+    android:layout_marginLeft="8dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FAF0D2">
+
+    <ImageView
+        android:id="@+id/items_img"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/ic_launcher_foreground"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/items_promotion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="promotion"
+            android:textColor="#F00"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/items_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="name"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/items_brand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="brand"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/items_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="price"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:textStyle="bold"/>
+    </LinearLayout>
+    
+</LinearLayout>

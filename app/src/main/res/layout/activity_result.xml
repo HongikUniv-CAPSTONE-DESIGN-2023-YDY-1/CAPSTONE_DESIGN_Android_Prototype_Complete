@@ -1,37 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    tools:context=".ResultActivity">
-
-    <ImageView
-        android:id="@+id/result_image"
-        android:layout_width="0dp"
+    android:orientation="vertical"
+    tools:context=".ui.ResultActivity"
+    android:background="@color/white">
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginStart="55dp"
-        android:layout_marginTop="115dp"
-        android:layout_marginEnd="55dp"
-        android:layout_marginBottom="115dp"
+        android:layout_weight="7"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="#FAF0D2"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/search"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FAF0D2"
+            android:textColor="@color/black"
+            android:text="검색결과"
+            android:textSize="40dp"
+            android:gravity="center"
+            android:textAlignment="center"/>
+        <ImageView
+            android:id="@+id/search_img"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="5dp"
+            android:src="@drawable/zero"
+            android:background="#FAF0D2"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="#FAF0D2">
+        <TextView
+            android:id="@+id/search_name"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#FAF0D2"
+            android:textColor="@color/black"
+            android:text="이름: 롯데)펩시제로라임P500ml"
+            android:textSize="15dp"
+            android:gravity="center"
+            android:textAlignment="center"/>
+        <TextView
+            android:id="@+id/search_kind"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#FAF0D2"
+            android:textColor="@color/black"
+            android:text="행사종류 \n2+1"
+            android:textSize="15dp"
+            android:gravity="center"
+            android:textAlignment="center"/>
 
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="#FAF0D2">
+        <TextView
+            android:id="@+id/search_price"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#FAF0D2"
+            android:textColor="@color/black"
+            android:text="1개당가격 \n 2000원"
+            android:textSize="15dp"
+            android:gravity="center"
+            android:textAlignment="center"/>
+        <TextView
+            android:id="@+id/search_discount"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#FAF0D2"
+            android:textColor="@color/black"
+            android:text="2+1가격 \n 4000원"
+            android:textSize="15dp"
+            android:gravity="center"
+            android:textAlignment="center"/>
 
-    <Button
-        android:id="@+id/btn_search"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:text="결과 검색하기"
-        android:textStyle="bold"
-        android:backgroundTint="#FAF0D2"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/result_image" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="#FAF0D2">
+        <TextView
+            android:id="@+id/search_location"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#FAF0D2"
+            android:textColor="@color/black"
+            android:text="할인하는 편의점 위치 보기:"
+            android:textSize="15dp"
+            android:gravity="center"
+            android:textAlignment="center"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageButton
+            android:id="@+id/search_con"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="20dp"
+            android:layout_weight="1"
+            android:backgroundTint="#FAF0D2"
+            android:src="@drawable/culog" />
+
+    </LinearLayout>
+
+
+
+
+
+
+
+</LinearLayout>
