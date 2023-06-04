@@ -36,6 +36,7 @@ class TextSearchActivity : AppCompatActivity() {
             searchItems(name, strength)
 
         }
+
     }
 
     private fun searchItems(keyword: String, strength: String) {
