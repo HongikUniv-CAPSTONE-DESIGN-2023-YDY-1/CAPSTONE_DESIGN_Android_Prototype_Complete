@@ -47,7 +47,7 @@ class ResultActivity : AppCompatActivity() {
             .build()
         api = retrofit.create(IRetrofit::class.java)
 
-        uploadImageToApi(savedUri!!)
+
 
 
 

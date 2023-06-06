@@ -11,6 +11,7 @@ import com.example.pt_b.recyclerview.ListLayout
 import com.example.pt_b.retrofit.IRetrofit
 import com.example.pt_b.retrofit.ResultSearchKeyword
 import com.example.pt_b.retrofit.RetrofitClient
+
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -40,6 +41,7 @@ class TextSearchActivity : AppCompatActivity() {
     }
 
     private fun searchItems(keyword: String, strength: String) {
+
         val retrofit = RetrofitClient.getClient("http://nas.robinjoon.xyz:8080") ?: return // 레트로핏 구성
         val api = retrofit.create(IRetrofit::class.java) // IRetrofit을 객체로 생성
         val call = api.searchItems(keyword, strength) // 검색 조건 입력
