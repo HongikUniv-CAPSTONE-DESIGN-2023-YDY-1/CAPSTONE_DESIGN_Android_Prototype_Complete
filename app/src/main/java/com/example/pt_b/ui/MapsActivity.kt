@@ -1,118 +1,139 @@
 package com.example.pt_b.ui
-
 import android.content.pm.PackageManager
 import android.location.Location
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Looper
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import com.example.pt_b.R
-
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.MarkerOptions
 import com.example.pt_b.databinding.ActivityMapsBinding
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationServices
-import com.google.android.libraries.places.api.Places
-import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest
-import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse
-import com.google.android.libraries.places.api.net.PlacesClient
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
-    private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
-    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private lateinit var searchLocation: String
-    private lateinit var placesClient: PlacesClient
-    private val permissionLancher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-        if (isGranted) {
-            onMapReady(mMap)
-        } else {
-            Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
-        }
-    }
+    private lateinit var convName: String
+    private lateinit var mMap: GoogleMap
+    private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
+    private lateinit var locationCallback: LocationCallback
+    private var conv: Location? = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val intent = intent
-        if (intent !=null && intent.hasExtra("loaction")){
-            searchLocation = intent.getStringExtra("location") ?: ""
-        }
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        if (!Places.isInitialized()) {
-            Places.initialize(this, getString(R.string.google_maps_key))
-            placesClient = Places.createClient(this)
+        // 이전 액티비티에서 편의점 이름 받아오기
+        val intent = intent
+        if (intent != null && intent.hasExtra("location")) {
+            convName = intent.getStringExtra("location") ?: ""
+        } else {
+            convName = ""
         }
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+        //권한
+        val pemissions = arrayOf(
+            android.Manifest.permission.ACCESS_FINE_LOCATION,
+            android.Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+        onRequestPermissionResult(100, pemissions, intArrayOf())
+        requirePermission(pemissions, 100)
 
-        val permission = android.Manifest.permission.ACCESS_FINE_LOCATION
-        val isPermissionGranted = ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
-        if (!isPermissionGranted) {
-            permissionLancher.launch(permission)
+
+    }
+
+    override fun onMapReady(googlemap: GoogleMap) {
+        mMap = googlemap
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+        updateLocation()
+
+    }
+
+    @SuppressWarnings("MissingPermission")
+    fun updateLocation(){
+        val locationRequest = LocationRequest.create()
+        locationRequest.run {
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+            interval = 1000
         }
-        val mapFragment = supportFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
+
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                locationResult?.let {
+                    for(location in it.locations) {
+                        lastLocation(location)
+                    }
+                super.onLocationResult(locationResult)
+            }
+        }
+
+    }
+        mFusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper())
+    }
+    fun lastLocation(lastLocation: Location) {
+        val myLocation = LatLng(lastLocation.latitude, lastLocation.longitude)
+        val markerOptions = MarkerOptions()
+            .position(myLocation)
+            .title("현재위치")
+        val cameraPosition = CameraPosition.builder()
+            .target(myLocation)
+            .zoom(18f)
+            .build()
+        mMap.clear()
+        mMap.addMarker(markerOptions)
+        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+    }
+
+    fun stratMap() {
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
     }
-
-    override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap
-
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            mMap.isMyLocationEnabled = true
-            fusedLocationProviderClient.lastLocation.addOnSuccessListener {location: Location? ->
-                if (location != null) {
-                    searchNearbyCon(location)
-                } else {
-                    Toast.makeText(this, "Location is null", Toast.LENGTH_SHORT).show()
-                }
-            }.addOnFailureListener {
-                Toast.makeText(this, "Location not found", Toast.LENGTH_SHORT).show()
-            }
-        } else {
-            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), 100)
+    private fun requirePermission(permissions: Array<String>, requestCode: Int) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            permissionGranted(requestCode)
+        } else{
+            ActivityCompat.requestPermissions(this, permissions, requestCode)
         }
     }
-    private fun searchNearbyCon(currentLocation: Location) {
-        val request = FindCurrentPlaceRequest.builder(listOf(Place.Field.NAME, Place.Field.LAT_LNG)).build()
 
-        placesClient.findCurrentPlace(request)
-            .addOnSuccessListener { response: FindCurrentPlaceResponse ->
-                val places = response.placeLikelihoods
-                if (places.isNotEmpty()) {
-                    for (placeLikelihood in places) {
-                        val place = placeLikelihood.place
-                        val placeLocation = place.latLng
-                        if (placeLocation !=null) {
-                            val markerOptions = MarkerOptions()
-                                .position(placeLocation)
-                                .title(place.name)
-                            mMap.addMarker(markerOptions)
-                        }
-                    }
-                    val firstPlace = places[0].place
-                    val firstPlaceLocation = firstPlace.latLng
-                    if (firstPlaceLocation != null) {
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(firstPlaceLocation, 18f))
-                    }
-                } else {
-                    Toast.makeText(this, "Place not found", Toast.LENGTH_SHORT).show()
-                }
-            }
-            .addOnSuccessListener { exception ->
-                Toast.makeText(this, "오류", Toast.LENGTH_SHORT).show()
-            }
+    fun onRequestPermissionResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
+            permissionGranted(requestCode)
+        } else {
+            permissionDenied(requestCode)
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
-    companion object {
-        private const val LOCATION_PERMISSION_REQUEST_CODE = 100
+    fun permissionGranted(requestCode: Int) {
+        stratMap()
+    }
+    fun permissionDenied(requestCode: Int) {
+        Toast.makeText(this, "권한이 승인되야 실행가능합니다.", Toast.LENGTH_SHORT).show()
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
+            permissionGranted(requestCode)
+        } else {
+            permissionDenied(requestCode)
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
 }

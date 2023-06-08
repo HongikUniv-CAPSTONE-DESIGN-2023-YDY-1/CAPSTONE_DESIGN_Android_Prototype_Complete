@@ -49,9 +49,10 @@ class ListAdapter(val itemList: ArrayList<ListLayout>): RecyclerView.Adapter<Lis
 
 
         val imgData = itemList[position].imgUrl
+        val fullImgUrl = "http://nas.robinjoon.xyz:8080/image/$imgData"
         if (imgData != null) {
             Glide.with(holder.itemView)
-                .load(imgData.toUri())
+                .load(fullImgUrl)
                 .into(holder.imgUrl)
         } else {
             Glide.with(holder.itemView)
