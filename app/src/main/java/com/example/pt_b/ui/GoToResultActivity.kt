@@ -7,17 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import com.example.pt_b.databinding.ActivityGoToResultBinding
-import com.example.pt_b.retrofit.IRetrofit
-import com.example.pt_b.retrofit.RetrofitClient
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.Request
-import okhttp3.RequestBody.Companion.asRequestBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import java.io.File
+
 
 
 class GoToResultActivity : AppCompatActivity() {

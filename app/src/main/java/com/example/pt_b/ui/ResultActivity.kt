@@ -2,7 +2,7 @@ package com.example.pt_b.ui
 
 
 
-import android.app.Activity
+
 import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
@@ -11,29 +11,26 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import com.example.pt_b.databinding.ActivityResultBinding
+import com.example.pt_b.recyclerview.ListLayout
 import com.example.pt_b.retrofit.IRetrofit
+import com.example.pt_b.retrofit.ItemInfo
+import com.example.pt_b.retrofit.ResultSearchKeyword
+import com.example.pt_b.retrofit.RetrofitClient
 import okhttp3.MediaType
+import java.io.File
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import java.io.File
+
 
 
 class ResultActivity : AppCompatActivity() {
     private lateinit var binding: ActivityResultBinding
-    private val BASE_URL = "http://nas.robinjoon.xyz:8080"
-    val savedUri = intent.getParcelableExtra<android.net.Uri>("savedUri")
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(BASE_URL)
-        .addConverterFactory(retrofit2.converter.gson.GsonConverterFactory.create())
-        .build()
-    private val api = retrofit.create(IRetrofit::class.java)
+    private var savedUri: Uri? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +38,7 @@ class ResultActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        val savedUri = intent.getParcelableExtra<android.net.Uri>("savedUri")
+        savedUri = intent.getParcelableExtra<Uri>("savedUri")
         if (savedUri == null) {
             Toast.makeText(this, "저장된 사진이 없습니다.", Toast.LENGTH_SHORT).show()
         }
@@ -53,10 +50,9 @@ class ResultActivity : AppCompatActivity() {
             intent.putExtra("location", "CU")
             startActivity(intent)
         }
+        val imgUri = absolutelyPath(savedUri!!)
 
-
-
-
+        uploadImageToServer(imgUri)
 
 
     }
@@ -66,7 +62,7 @@ class ResultActivity : AppCompatActivity() {
 
         val cursor: Cursor? = contentResolver.query(contentURI, null, null, null, null)
 
-        if (cursor == null) { // Source is Dropbox or other similar local file path
+        if (cursor == null) {
             result = contentURI.path ?: ""
         } else {
             cursor.moveToFirst()
@@ -78,43 +74,33 @@ class ResultActivity : AppCompatActivity() {
         return result
     }
 
-    private fun postImageToServer(body: MultipartBody.Part){
-        api.postImage(body).enqueue(object : Callback<String> {
-            override fun onResponse(call: Call<String>, response: Response<String>) {
-                if(response.isSuccessful){
-                    Toast.makeText(this@ResultActivity, "검색 성공", Toast.LENGTH_SHORT).show()
-                    Log.d("API", "이미지 전송 성공")
-                    val result = response.body()
+    fun uploadImageToServer(imgUri: String) {
+        val file = File(imgUri)
+        val requestBody = RequestBody.create(MediaType.parse("image/*"), file)
+        val imagePart = MultipartBody.Part.createFormData("img", file.name, requestBody)
+        val retrofit = RetrofitClient.getClient("http://nas.robinjoon.xyz:8080") ?: return
+        val api = retrofit.create(IRetrofit::class.java)
+        val call = api.postImage(imagePart)
+        call.enqueue(object : Callback<ResultSearchKeyword> {
+            override fun onResponse(call: Call<ResultSearchKeyword>, response: Response<ResultSearchKeyword>) {
+                // 통신 성공
 
-                    val jsonResponse =JSONObject(result)
-                    val searchItems =jsonResponse.getJSONObject("response").getJSONArray("searchItems")
-                    for (i in 0 until searchItems.length()) {
-                        val item = searchItems.getJSONObject(i)
-                        val name = item.getString("name")
-                        val imgUrl = item.getString("imgUrl")
-                        val brand = item.getString("brand")
-                        val promotion = item.getString("promotion")
-                        val pricePerUnit = item.getInt("pricePerUnit")
-                        val pricePerGroup = item.getInt("pricePerGroup")
+                val result = response.body()
+                Log.d("API", result.toString())
+                Log.d("API", "API 서버와의 통신 성공")
 
-                        Log.d("API", "상품 이름: $name")
-                        Log.d("API", "이미지 URL: $imgUrl")
-                        Log.d("API", "브랜드: $brand")
-                        Log.d("API", "프로모션: $promotion")
-                        Log.d("API", "단위 가격: $pricePerUnit")
-                        Log.d("API", "그룹 가격: $pricePerGroup")
-                    }
-                }
             }
 
-            override fun onFailure(call: Call<String>, t: Throwable) {
-                Log.d("API", "이미지 전송 실패")
-                Log.e( "API", t.toString())
-                Toast.makeText(this@ResultActivity, "서버에 사진을 업로드 실패하였습니다. 다시 시도해주세요", Toast.LENGTH_SHORT).show()
+            override fun onFailure(call: Call<ResultSearchKeyword>, t: Throwable) {
+                // 통신 실패
+                Toast.makeText(this@ResultActivity, "통신 실패: ${t.message}", Toast.LENGTH_LONG).show()
+                Log.d("API", "API 서버와의 통신 실패")
             }
-
         })
+
+
     }
 
 
 }
+

@@ -21,5 +21,7 @@ interface IRetrofit {
     @POST("/konbini/items/image")
     fun postImage(
         @Part image: MultipartBody.Part
-    ): Call<String>
+    ): Call<ResultSearchKeyword>
+
+
 }

@@ -8,6 +8,8 @@ data class ResultSearchKeyword(
     var message: String?
 )
 
+
+
 data class ResponseData(
     var searchItems: List<ItemInfo>?
 )
