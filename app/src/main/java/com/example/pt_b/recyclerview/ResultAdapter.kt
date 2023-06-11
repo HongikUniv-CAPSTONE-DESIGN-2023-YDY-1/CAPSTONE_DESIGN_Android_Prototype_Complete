@@ -1,6 +1,7 @@
 package com.example.pt_b.recyclerview
 
 
+
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +13,7 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.pt_b.R
-import com.example.pt_b.ui.MapActivity
+import com.example.pt_b.ui.MapsActivity
 
 
 class ResultAdapter(val itemList: ArrayList<ResultLayouot>): RecyclerView.Adapter<ResultAdapter.ViewHolder>() {
@@ -43,7 +44,7 @@ class ResultAdapter(val itemList: ArrayList<ResultLayouot>): RecyclerView.Adapte
         }
         holder.brand.setOnClickListener{
 
-            val intent = Intent(holder.itemView.context, MapActivity::class.java)
+            val intent = Intent(holder.itemView.context, MapsActivity::class.java)
             intent.putExtra("placeName", brand)
             startActivity(holder.itemView.context, intent, null)
         }
