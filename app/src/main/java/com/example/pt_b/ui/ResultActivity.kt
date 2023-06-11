@@ -11,8 +11,13 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.pt_b.databinding.ActivityResultBinding
+import com.example.pt_b.recyclerview.ListAdapter
 import com.example.pt_b.recyclerview.ListLayout
+import com.example.pt_b.recyclerview.ResultAdapter
+import com.example.pt_b.recyclerview.ResultLayouot
 import com.example.pt_b.retrofit.IRetrofit
 import com.example.pt_b.retrofit.ItemInfo
 import com.example.pt_b.retrofit.ResultSearchKeyword
@@ -30,6 +35,8 @@ import retrofit2.Response
 class ResultActivity : AppCompatActivity() {
     private lateinit var binding: ActivityResultBinding
     private var savedUri: Uri? = null
+    private var listItem = ArrayList<ResultLayouot>() // 리사이클러 뷰 아이템
+    private var listAdapter = ResultAdapter(listItem) // 리사이클러 뷰 어댑터
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,18 +49,16 @@ class ResultActivity : AppCompatActivity() {
         if (savedUri == null) {
             Toast.makeText(this, "저장된 사진이 없습니다.", Toast.LENGTH_SHORT).show()
         }
-
-
-
-        binding.searchCon.setOnClickListener {
-            intent = Intent(this, MapsActivity::class.java)
-            intent.putExtra("location", "CU")
-            startActivity(intent)
-        }
         val imgUri = absolutelyPath(savedUri!!)
-
         uploadImageToServer(imgUri)
-
+        binding.rvResultItems.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvResultItems.adapter = listAdapter
+        val itemAnimator = DefaultItemAnimator()
+        itemAnimator.addDuration = 200
+        itemAnimator.removeDuration = 200
+        itemAnimator.moveDuration = 200
+        itemAnimator.changeDuration = 200
+        binding.rvResultItems.itemAnimator = itemAnimator
 
     }
 
@@ -86,6 +91,7 @@ class ResultActivity : AppCompatActivity() {
                 // 통신 성공
 
                 val result = response.body()
+                addInfo(result)
                 Log.d("API", result.toString())
                 Log.d("API", "API 서버와의 통신 성공")
 
@@ -99,6 +105,29 @@ class ResultActivity : AppCompatActivity() {
         })
 
 
+    }
+    private fun addInfo(searchResult: ResultSearchKeyword?) {
+        val response = searchResult?.response
+        val searchItems = response?.searchItems
+
+        if (!searchItems.isNullOrEmpty()) {
+            listItem.clear()
+            for (item in searchItems) {
+                val name = item.name ?: ""
+                val imgUrl = item.imgUrl ?: ""
+                val brand = item.brand ?: ""
+                val promotion = item.promotion ?: ""
+                val pricePerUnit = item.pricePerUnit ?: 0
+                val pricePerGroup = item.pricePerGroup ?: 0
+                val listItems = ResultLayouot(brand, name, pricePerUnit, pricePerGroup, promotion, imgUrl)
+                listItem.add(listItems)
+            }
+            listAdapter.notifyDataSetChanged()
+        } else {
+            intent = Intent(this, CameraActivity::class.java)
+            Toast.makeText(this, "검색 결과가 없습니다.", Toast.LENGTH_SHORT).show()
+            startActivity(intent)
+        }
     }
 
 

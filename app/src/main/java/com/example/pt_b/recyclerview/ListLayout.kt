@@ -7,3 +7,5 @@ data class ListLayout(
     var promotion: String,
     var price: Int,
 )
+
+

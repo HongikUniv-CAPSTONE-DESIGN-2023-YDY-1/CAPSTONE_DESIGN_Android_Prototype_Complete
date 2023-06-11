@@ -29,7 +29,7 @@ class ListAdapter(val itemList: ArrayList<ListLayout>): RecyclerView.Adapter<Lis
             "CU" -> Color.parseColor("#800080")
             "GS25" -> Color.parseColor("#50bcdf")
             "SEVENELEVEN" -> Color.parseColor("#008000")
-            "EMART24" -> Color.parseColor("#FFFF00")
+            "EMART24" -> Color.parseColor("#CC6600")
             else -> Color.BLACK
         }
         holder.brand.text = brand

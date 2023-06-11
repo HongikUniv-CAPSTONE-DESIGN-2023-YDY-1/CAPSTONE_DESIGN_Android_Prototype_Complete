@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.camera.core.AspectRatio
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
@@ -98,18 +99,25 @@ class CameraActivity : AppCompatActivity() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
         cameraProviderFuture.addListener(Runnable {
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
-            val preview = Preview.Builder().build().also{
-                it.setSurfaceProvider(binding.viewFinder.surfaceProvider)
-                imageCapture = ImageCapture.Builder().build()
-            }
+            val preview = Preview.Builder().build()
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+            try {
+                preview.setSurfaceProvider(binding.viewFinder.surfaceProvider)
+                imageCapture = ImageCapture.Builder()
+                    .setTargetAspectRatio(AspectRatio.RATIO_16_9)
+                    .build()
+            } catch (e: Exception) {
+                Log.e(TAG, "바인딩 오류", e)
+            }
+
+
             try {
                 cameraProvider.unbindAll()
                 cameraProvider.bindToLifecycle(
                     this, cameraSelector, preview, imageCapture
                 )
             } catch (e: Exception) {
-                Log.e(TAG, "Use case binding failed", e)
+                Log.e(TAG, "바인딩 오류", e)
             }
         }, ContextCompat.getMainExecutor(this))
 
